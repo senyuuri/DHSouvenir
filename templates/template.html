@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>DHS Souvenir Store</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static',filename='css/bootstrap-responsive.css') }}">
+</head>
+<body>
+	 <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="/"><span class="color-highlight">DHS</span>Souvenir Store</a>
+          <div class="nav-collapse">
+            <ul class="nav pull-right">
+              <li class="active"><a href="/main">Home</a></li>
+              <li><a href="/cart">My Cart</a></li>
+              <li><a href="/profile">Profile</a></li>
+			  <li><a href="/contact">Contact</a></li>
+			  {% if session['logged_in'] == True %}
+			  <li><a href="/logout">Logout</a></li>
+			  {% endif %}
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+	{% block content %}
+
+	{% endblock %}
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+ <HEAD>
+  <TITLE> New Document </TITLE>
+  <META NAME="Generator" CONTENT="EditPlus">
+  <META NAME="Author" CONTENT="">
+  <META NAME="Keywords" CONTENT="">
+  <META NAME="Description" CONTENT="">
+  <script>
+  function add(obj){
+    var p =obj.parentElement;
+    var t =p.getElementsByTagName("input")[0];
+    t.value = t.value*1 +1;
+    var p = obj.previousSibling;
+    p.value = p.value +1;
+  }
+    function min(obj){
+    var p =obj.parentElement;
+    var t =p.getElementsByTagName("input")[0];
+    t.value = t.value*1 -1;
+  }
+  </script>
+ </HEAD>
+ 
+ <BODY>
+  <p> <input type="text" name="T1" size="20" value="0"> 
+  <input type="button" width=50px value="+" onclick="add(this)">
+  <input type="button" width=50px value="-" onclick="min(this)"></p> 
+　 <p> <input type="text" name="T1" size="20" value="0"> 
+<input type="button" width=50px value="+" onclick="add(this)">
+  <input type="button" width=50px value="-" onclick="min(this)"></p> 
+　 <p> <input type="text" name="T1" size="20" value="0">
+<input type="button" width=50px value="+" onclick="add(this)">
+  <input type="button" width=50px value="-" onclick="min(this)"></p> 
+ 
+ </BODY>
+</HTML>
