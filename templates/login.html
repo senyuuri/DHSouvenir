@@ -1,27 +1,50 @@
 {% extends 'template.html' %}
+
+
+
 {% block content %}
-{% if error %}
-<div class="alert alert-error">
- {{error}}
-</div>
-{% endif %}
-<div class='row' style='margin-left:5%;'>
-<form action="" method="post">
 
-	<div class="controls">
-		<label class="control-label" for="input01">Username </label>
-		<input class="input-xlarge" id='input01' type="text" name="username" value="{{request.form.username }}">
-	</div>
-</br>
 
-	<div class="controls">
-		<label class="control-label" for="input01">Password  </label>
-    <input class="input-xlarge" id='input02'type="password" name="password" value="{{request.form.password }}">
-    </div>
+<script type="text/javascript">
+function set_openid(openid, pr)
+{
+    u = openid.search('<username>')
+    if (u != -1) {
+        // openid requires username
+        user = prompt('Enter your ' + pr + ' username:')
+        openid = openid.substr(0, u) + user
+    }
+    form = document.forms['login'];
+    form.elements['openid'].value = openid
+}
+</script>
 
-	</br>
-    <input type="submit" class="btn btn-large" value="Login">
-    <a href="/register"> Click here if you do not have an account </a>
+<div class='hero-unit'>
+
+<form action="" method="post" name="login">
+    <fieldset>
+    <h2>Sign In</h2>
+    {{form.hidden_tag()}}
+     <div class="help-block">Enter your OpenID here:</div>
+    <div class="control-group{% if form.errors.openid %} error{% endif %}">
+            <div class="controls">
+                {{ form.openid(size = 80, class = "span4") }}
+                {% for error in form.errors.openid %}
+                    <span class="help-inline">[{{error}}]</span><br>
+                {% endfor %}
+            </div>
+        </div>
+   
+        <div class="control-group">
+            <small>Other providers:</small>
+            {% for pr in providers %}
+            <a href="javascript:set_openid('{{pr.url}}', '{{pr.name}}');"><img src="/static/img/{{pr.name.lower()}}.png" class="img-polaroid" style="margin:2px;" /></a>
+            {% endfor %}
+        </div>
+       
+    <p>{{form.remember_me}} Remember Me</p>
+    <p><input type="submit" value="Sign In"></p>
+    </fieldset>
 </form>
 </div>
 {% endblock %}

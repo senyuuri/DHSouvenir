@@ -1,0 +1,6 @@
+{% extends 'template.html' %}
+{% block content %}
+{{user.username}}
+{{user.email}}
+<td><img src="{{user.avatar(128)}}"></td>
+{% endblock %}

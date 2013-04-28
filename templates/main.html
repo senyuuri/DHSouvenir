@@ -1,40 +1,58 @@
 {% extends 'template.html' %}
 {% block content %}
+
 <script>
   function add(index){
-    document.getElementsById(index+'num').value = document.getElementsById(index+'num').value*1+1;
+  	if((document.getElementById(index+'num').value*1+1)<=(document.getElementById(index+'total').value)){
+    document.getElementById(index+'num').value = document.getElementById(index+'num').value*1+1};
     
   }
-    function min(obj){
-    document.getElementsById(index+'num').value = document.getElementsById(index+'num').value*1-1;
+    function minx(index){
+    if((document.getElementById(index+'num').value*1-1)>=0){
+    document.getElementById(index+'num').value = document.getElementById(index+'num').value*1-1};
   }
 </script>
 
-<form action="" method="post" class='span4'>
+
+<div style='padding:40px;'>
+	<h2>Order List</h2>
+	<hr>
+<form method="post">
 <table class="table table-striped">
 	<tr>
-		<th>Number</th>
+		<th>PID</th>
 		<th>Product</th>
 		<th>Price</th>
+		<th>Available Store</th>
+		<th>Order</th>
 	</tr>
-	{{storelist}}
+	
 	{% for s in storelist %}
 	<tr>
-		<td>{{s.id}}</td>
+		<td>{{s.pid}}</td>
 		<td>{{s.name}}</td>
 		<td>{{s.price}}</td>
-		<td>{{s.store}}</td>
+		<td>{{s.number}}</td>
 		<td>
+			<div class="input-append">
 			<p>
-			<input type='text' id='{{s.id}}num' name='{{s.id}}' value='0'>
-			<input type="button" id='{{s.id}}' width=50px value="+" onclick="add({{s.id}})">
-  			<input type="button" id='{{s.id}}' width=50px value="-" onclick="min({{s.id}})">
+			<input type='text' class='span2 uneditable-input' id='{{s.pid}}num' name='rorder' value='0' readonly="readonly">
+			<input type='hidden' id='{{s.pid}}total' value='{{s.number}}'>
+			<input type="button" class='btn' id='{{s.pid}}' width=50px value="+" onclick="add({{s.pid}})">
+  			<input type="button" class='btn' id='{{s.pid}}' width=50px value="-" onclick="minx({{s.pid}})">
   		</p>
 		</td>
 	</tr>
 	{% endfor %}
-	
+	<tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td><td>
+	<input type="submit" class='btn btn-info btn-large offset1'value='Add to my cart'>
+</td>
+</tr>
 </table>
-<input type="submit">
 </form>
+
 {% endblock %}
