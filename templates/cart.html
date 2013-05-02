@@ -1,3 +1,38 @@
 {% extends 'template.html' %}
 {% block content %}
+<div style='padding:40px;'>
+	<h2>Orders in MyCart</h2>
+	<hr>
+	<table class="table table-hover">
+	<tr>
+		<th>Product</th>
+		<th>Single Price</th>
+		<th>Number</th>
+	</tr>
+	
+		{% for o in data %}
+		<tr>
+		<td>{{o[0]}}</td>
+		<td>{{o[1]}}</td>
+		<td>{{o[2]}}</td>
+		</tr>
+		{% endfor %}
+	
+	<tr>
+		<td></td>
+		<td></td>
+
+		<td><strong>Total Amount: {{total}}</strong></td>
+	</tr>
+    
+	</table>
+	<form method='post' action='{{url_for('mail')}}'>
+	<div class="form-actions ">
+	<input type='hidden' name='mailtext' value='{{mailtext}}'>
+	<input type='submit' class=' btn btn-primary'value='Check out'>
+	<input type='submit' class=' btn 'value='Cancel Order'>
+	</div>
+	</form>
+</div>
+
 {% endblock %}

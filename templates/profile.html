@@ -1,6 +1,19 @@
 {% extends 'template.html' %}
 {% block content %}
-{{user.username}}
-{{user.email}}
-<td><img src="{{user.avatar(128)}}"></td>
+
+<div class='hero-unit'>
+<div class='row'>
+<h2>Profile</h2>
+<br>
+<div class='span2'>
+<img src="{{user.avatar(128)}}">
+</div>
+
+<div class='span8'>
+<strong>User: {{user.username}}</strong>
+</br>
+<strong>Email: {{user.email}}</strong>
+</div>
+</div>
+</div>
 {% endblock %}
