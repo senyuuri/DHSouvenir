@@ -1,11 +1,9 @@
 # config.py
 import os
+import inconfig
 basedir = os.path.abspath(os.path.dirname(__file__))
 DATABASE = 'dhs.db'
-USERNAME = 'admin'
-PASSWORD = 'admin'
-CSRF_ENABLED = True
-SECRET_KEY = 'natsuyuu'
+
 
 DATABASE_PATH = os.path.join(basedir, DATABASE)
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + DATABASE_PATH
@@ -16,3 +14,4 @@ OPENID_PROVIDERS = [
 	    			{ 'name': 'Yahoo', 'url': 'https://me.yahoo.com' },
 	    			{ 'name': 'Flickr', 'url': 'http://www.flickr.com/<username>' },
 	    			{ 'name': 'MyOpenID', 'url': 'https://www.myopenid.com' }]
+

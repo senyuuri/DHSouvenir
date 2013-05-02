@@ -1,14 +1,14 @@
 #main.py alpha0.2
 import os
 from flask import Flask, flash, redirect, render_template,request, session, url_for, g
-from functools import wraps
 from flask.ext.sqlalchemy import SQLAlchemy
 from flask.ext.login import LoginManager,login_user, logout_user, current_user, login_required
 from flask.ext.openid import OpenID
-
-from model import *
-from forms import *
+from threading import Thread
+from flask.ext.mail import Message
+from flask.ext.mail import Mail
 from config import basedir
+
 
 #flask init
 app = Flask(__name__)
@@ -26,7 +26,15 @@ lm.login_view = 'login'
 #openid init
 oid = OpenID(app, os.path.join(basedir, 'tmp'))
 
+#mail init
+mail = Mail(app)
 #required by flask-login
+
+from model import *
+from forms import *
+
+
+
 @lm.user_loader
 def load_user(id):
 	return User.query.get(int(id))
@@ -35,6 +43,7 @@ def load_user(id):
 def before_request():
 	g.user = current_user
 
+@app.route('/', methods = ['GET', 'POST'])
 @app.route('/login', methods = ['GET', 'POST'])
 @oid.loginhandler
 def login():
@@ -69,9 +78,7 @@ def after_login(resp):
 	login_user(user, remember = remember_me)
 	return redirect(request.args.get('next') or url_for('main'))
 
-@app.route('/')
-def welcome():
-	return "welcome!"
+
 
 @app.route('/logout')
 def logout():
@@ -138,14 +145,56 @@ def main():
 	storelist = Store.query.all()
 	return render_template('main.html', user=user, storelist=storelist)
 
+def get_store_list():
+	store = Store.query.all()
+	temp = []
+	for s in store:
+		temp.append([s.pid,s.name,s.price])
+	return temp
+
 @app.route('/cart',methods=['GET', 'POST'])
 def cart():
 	user = g.user
-	return render_template('cart.html')
+	sl = get_store_list()
+	result = Uorder.query.filter(Uorder.uid==user.uid).filter(Uorder.num != 0).all()
+	data = []
+	total = 0
+	for r in result:
+		data.append([sl[int(r.pid)-1][1],sl[int(r.pid)-1][2],r.num])
+		total = total + r.num * sl[int(r.pid)-1][2]
+	temp = 'Here is your order list in DHSouvenir online shop:\n'
+	for d in data:
+		temp += 'Item:'+d[0]+"  Single Price:"+str(d[1])+'  Number:'+str(d[2])+'\n'
+	temp += "Total amount: $" + 'total' +'\n \n If you have any doubt, please contact dhssouvenir@gmail.com.Thank you:)'
+	mailtext = ('Dear ' + user.username + ', \n'+temp)
+	#result = Store.query.join(Store,(Store.pid == Uorder.pid)).all()
+	return render_template('cart.html',total=total,data=data,user=user,mailtext=mailtext)
+
+
+#Using new thred to send email asynchronously
+def async(f):
+    def wrapper(*args, **kwargs):
+        thr = Thread(target = f, args = args, kwargs = kwargs)
+        thr.start()
+    return wrapper
+
+@async
+def send_async_email(msg):
+    mail.send(msg)
+
+def send_email(subject, sender, recipients, text_body, html_body):
+    msg = Message(subject, sender = sender, recipients = recipients)
+    msg.body = text_body
+    msg.html = html_body
+    send_async_email(msg)
 
 @app.route('/mail',methods=['GET', 'POST'])
 def mail():
-	pass
+	user = g.user
+	mailtext = request.form.get('mailtext')
+	send_email('DHSouvenir Order', app.config['ADMIN'], user.email, mailtext, mailtext)
+	return render_template('mail.html')
+	#result = Store.query.join(Store,(Store.pid == Uorder.pid)).all()
 
 if __name__ == '__main__':
-	app.run(host="localhost",port=8888,debug=True)
+	app.run()
